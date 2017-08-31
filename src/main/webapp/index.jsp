@@ -7,6 +7,19 @@
     
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+
+<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+
+
 <script type="text/javascript" src="js/jquery.dice.js"></script>    
 <style type="text/css">
 .Rectangle-2 {
@@ -89,6 +102,10 @@
 html, body, .wrappers, .flex-container {
   height: 100%
 }
+
+ul li{
+  display: inline;
+}
 </style>    
     
 </head>
@@ -119,36 +136,121 @@ html, body, .wrappers, .flex-container {
 						<!-- Third row after page header -->
 						<div class="col-lg-12">
 							<div class="panel panel-default" style="">
-								<div class="panel-heading" style="font-weight: bold;">Sanek
+								<div class="panel-heading" style="font-weight: bold;">Snake
 									& Ladder</div>
 								<div class="panel-body">
 
+									
+									
+									
+									
 									<div class="form-group">
-										<div class="row" style="margin-top: 2em">
-
-
-											<div class="col-xs-4" id="from_column">
-												<label class="control-label">Number of squares</label> <input
-													id="numberOfSquares" type="number" data-toggle="tooltip"
-													title="Should be divisible by 3 and be a multiple of 10" />
-
-												<button type="button" onclick="generateGameBoard()"
-													class="btn btn-success">Generate Game Board</button>
-
+										<div class="row" style="margin-top: 2em">	
+											<div class="col-xs-4" style="margin-left: 13%;">
+												<div class="form-group">
+													<label>Number of squares</label> <input id="numberOfSquares"
+														type="number" class="form-control">
+												</div>
 											</div>
+											
+											<div class="col-xs-4" style="margin-left:10px">
+												<div class="form-group">
+													<label>Memory square</label> <input id="memorySquare"
+														type="number" class="form-control">
+												</div>
+											</div>
+											
+											
+											<div class="col-xs-4" style="margin-left:10px">
+												<div class="form-group">
+													<label>Magic square</label> <input id="magicSquare"
+														type="number" class="form-control">
+												</div>
+											</div>
+											
+											
+											
+
+
 										</div>
 									</div>
+									
+									
+									<div class="form-group">
+										<div class="row" style="margin-top: 2em">	
+											<div class="col-xs-4" style="margin-left: 13%;">
+												<div class="form-group">
+													<label>Trampoline square</label> <input id="trampolineSquare"
+														type="number" class="form-control">
+												</div>
+											</div>
+											
+											<div class="col-xs-4" style="margin-left:10px">
+												<div class="form-group">
+													<label>Elevator square</label> <input id="elevatorSquare"
+														type="number" class="form-control">
+												</div>
+											</div>
+											
+											
+											<div class="col-xs-4" style="margin-left:10px">
+												<div class="form-group">
+													<label>Pitstop square</label> <input id="pitStopSquare"
+														type="text" class="form-control">
+												</div>
+											</div>
+											
+											
+											
 
+
+										</div>
+									</div>
+									
+
+									<div class="form-group">
+										<div class="row" style="margin-top: 2em">	
+											<div class="col-xs-4" id="snake_input_fields_wrap" style="margin-left: 26%;">
+												<div class="title-action">
+													<label class="error" id="snakeError" style="display: none;">Remove
+														from descending order.</label> <a href="#"
+														 onclick="addSnakes(); return false;"
+														class="btn btn-primary">Add Snake</a>
+												</div>
+												<div class="form-group">
+													<label>Snake 1</label> <input id="snake1" name="snake[]"
+														type="text" class="form-control">
+												</div>
+											</div>
+											
+											
+											
+											<div class="col-xs-4" id="ladder_input_fields_wrap" style="margin-left:10px">
+												<div class="title-action">
+													<label class="error" id="ladderError" style="display: none;">Remove
+														from descending order.</label> <a href="#"
+														onclick="addLadders(); return false;"
+														class="btn btn-primary">Add Ladder</a>
+												</div>
+												<div class="form-group">
+													<label>Ladder 1</label> <input id="ladder1" name="ladder[]"
+														type="text" class="form-control">
+												</div>
+											</div>
+
+											
+										</div>
+									</div>
+<button type="button" onclick="generateGameBoard()"
+													class="btn btn-success">Generate Game Board</button>
 								</div>
 							</div>
 						</div>
 					</div>
 
 
-<div class="wrappers">
-        <ul id="gameBoard" class="flex-container">
-            
-        </ul>
+<div class="wrappers" id="gameBoard">
+        
     </div>
 
 
@@ -164,20 +266,65 @@ html, body, .wrappers, .flex-container {
 		<div id="dice" style="width:300px; height:400px; border:solid 1px black;"></div>
 		
 		<br />
-		<button type="button" id="btn_roll">Roll the dice to </button>
+		<button type="button" id="btn_roll" onclick="diceRolled()">Roll the dice to </button>
 		<input type="text" id="rollValue" value = "5" />
 		or
-		<button type="button" id="btn_randRoll">Random!</button>
+		<button type="button" id="btn_randRoll" onclick="diceRolled()">Random!</button>
 		
-		<input id="test" type = "text"/>
+		<input id="test" type = "text" />
+   
+
+		
+		<h1>Player1 details</h1>
+				<table id="p1Details">
+					<thead>
+						<tr style="font-size: 14px;">
+							<th>#</th>
+							<th>Position</th>
+						</tr>
+					</thead>
+
+					<tbody id="p1DetailsBody" style="font-size: 12px;">
+						
+					</tbody>	
+				</table>
+				
+				<h1>Player2 details</h1>
+				<table id="p2Details">
+					<thead>
+						<tr style="font-size: 14px;">
+							<th>#</th>
+							<th>Position</th>
+						</tr>
+					</thead>
+
+					<tbody id="p2DetailsBody" style="font-size: 12px;">
+						
+					</tbody>	
+				</table>
    </div>
+   
+   
+      <div class="Adds col-sm-3" style="">                        
+   		       
+   	  </div>
+   	  
+   	  <div class="Adds col-sm-3" style="">                        
+   		       
+   	  </div>
+   
+   
+   
 </div>
   
 </div><!-- /.container -->
 
 
 <script type="text/javascript">
-		
+
+var snake = [];
+var ladder = [];
+var gameModel;
 			$(function(){
 				$("#dice").dice();
 				$("#dice, #btn_randRoll").click(function(){
@@ -192,32 +339,181 @@ html, body, .wrappers, .flex-container {
 					$("#dice").dice("option", {diceSize:$("#dsize").val()});
 				});
 				
+				
+				
+				$('#numberOfSquares').val("64");
+
+				$('#memorySquare').val("6");
+				$('#magicSquare').val("10");
+				$('#trampolineSquare').val("12");
+				$('#elevatorSquare').val("14");
+				$('#pitStopSquare').val("16-5");
+				$('#snake1').val("22,8-4");
+				$('#ladder1').val("7,54");
+				
+				$('#p1Details').dataTable();
+				
+				$('#p2Details').dataTable();
+				
 			});
 			
+	var snakeNext = 1;	
+	function addSnakes() {
+	            console.log("add more stages "+snakeNext);
+	            snakeNext = snakeNext + 1;
+	            //if(x < max_fields){ //max input box allowed
+	               // x++; //text box increment
+	                var htmld = "<div class='form-group' id='snakeDiv"+snakeNext+"'>";
+	                		htmld += "<label>Snake "+snakeNext+"</label>";                    	                                  
+	                		htmld += "<div class='input-group'><input id='snake"+snakeNext+"' name='snake[]' type='text' class='form-control'>";	
+	                		htmld += "<span class='input-group-btn'><button class='btn btn-danger btn-remove' onclick='removeSnakeStage("+snakeNext+")' type='button'>";
+	                			htmld += "<span class='glyphicon glyphicon-minus'></span>";
+	                		htmld += "</button></span></div>";
+	                	htmld += "</div>";
+	                	$("#snake_input_fields_wrap").append(htmld);
+	                       
+	    }	
+	            
+	            
+	    var ladderNext = 1;        
+	    function addLadders() {
+            console.log("add more stages "+ladderNext);
+            ladderNext = ladderNext + 1;
+            
+                var htmld = "<div class='form-group' id='ladderDiv"+ladderNext+"'>";
+                		htmld += "<label>Ladder "+ladderNext+"</label>";                    	                                  
+                		htmld += "<div class='input-group'><input id='ladder"+ladderNext+"' name='ladder[]' type='text' class='form-control'>";	
+                		htmld += "<span class='input-group-btn'><button class='btn btn-danger btn-remove' onclick='removeLadderStage("+ladderNext+")' type='button'>";
+                			htmld += "<span class='glyphicon glyphicon-minus'></span>";
+                		htmld += "</button></span></div>";
+                	htmld += "</div>";
+                	$("#ladder_input_fields_wrap").append(htmld);
+                       
+    }           
+	
+	
+
+    function removeSnakeStage(id) {
+        console.log(id);
+		var stageid = "#snakeDiv"+id;
+		if(id<snakeNext) {
+			//alert("remove stages from descending order!");
+			$("#snakeError").show();
+			//$('#stageError').delay(5000).fadeOut('slow');
+			setTimeout(function() {
+				  $('#snakeError').fadeOut('slow');
+				}, 5000);
+		} else {
+			snakeNext = snakeNext - 1;
+			$(stageid).remove();
+		}
+    }
+    
+    function removeLadderStage(id) {
+        console.log(id);
+		var stageid = "#ladderDiv"+id;
+		if(id<ladderNext) {
+			//alert("remove stages from descending order!");
+			$("#ladderError").show();
+			//$('#stageError').delay(5000).fadeOut('slow');
+			setTimeout(function() {
+				  $('#ladderError').fadeOut('slow');
+				}, 5000);
+		} else {
+			ladderNext = ladderNext - 1;
+			$(stageid).remove();
+		}
+    }
 			
+			
+	
 	function generateGameBoard() {
+		
 		var num = $('#numberOfSquares').val();
 
-		if (num % 3 != 0 && num % 10 != 0) {
-			if (num % 2 != 0) {
-				alert("Only even multiples of 10 and divisible by 3 is  allowed.");
-			}
-			return;
+		var memorySquare = $('#memorySquare').val();
+		var magicSquare = $('#magicSquare').val();
+		var trampolineSquare = $('#trampolineSquare').val();
+		var elevatorSquare = $('#elevatorSquare').val();
+		var pitStopSquare = $('#pitStopSquare').val();
+		var snakeSquare = $('#snake1').val();
+		var ladderSquare = $('#ladder1').val();
+		
+		var dataObj = {
+				
+				'numberOfSquares' : num,
+				'memorySqaure' : memorySquare,
+				'magicSquare' : magicSquare,
+				'trampoline' : trampolineSquare,
+				'elevator' : elevatorSquare,
+				'pitStopSquare' : pitStopSquare,
+				'elevatorSquare' : elevatorSquare,
+				'snakes' : snakeSquare,
+				'ladders' : ladderSquare
+				
 		}
+		var gameDetails = JSON.stringify(dataObj);
+		
+		console.log(gameDetails);
+		
 		$.ajax({
+			type : "POST",
+			url : '/SnakeLadder/gameBoard',
+			data : gameDetails,
 			contentType : 'application/json;charset=UTF-8',
-			url : '/SnakeLadder/gameBoard/' + $('#numberOfSquares').val(),
-			type : 'GET',
-			cache : false, // Force requested pages not to be cached by the browser
-
 			success : function(response) {
 				console.log(response);
+				
+				gameModel = response;
 
 				console.log(response.gameHtml);
 
 				$('#gameBoard').html(response.gameHtml);
+				
+				$('#player1Loc_'+response.userLocation).show();
+				
+				$('#player2Loc_'+response.compLocation).show();
+
 			}
 		});
+		
+	}
+	
+	function diceRolled(){
+		setTimeout(
+				  function() 
+				  {
+		var diceValue = $('#test').val();
+		console.log(diceValue);
+		gameModel["diceValue"] = diceValue;
+		var gameDetails = JSON.stringify(gameModel);
+		
+		
+		
+		console.log(gameDetails);	
+		
+		$.ajax({
+			type : "POST",
+			url : '/SnakeLadder/diceRolled',
+			data : gameDetails,
+			contentType : 'application/json;charset=UTF-8',
+			success : function(response) {
+				
+				
+				gameModel = response;
+
+				
+
+				$('#gameBoard').html(response.gameHtml);
+				
+				$('#player1Loc_'+response.userLocation).show();
+				
+				$('#player2Loc_'+response.compLocation).show();
+
+			}
+		});
+				  },2000);
+		
 	}
 </script>
 </body>
