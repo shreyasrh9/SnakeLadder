@@ -28,6 +28,8 @@ public class GameController {
 			throws Exception {
 
 		GameModel gameModel = new GsonBuilder().create().fromJson(gameDetails, GameModel.class);
+		
+		gameModel.setMessage("");
 
 		String[] snakesSplit = gameModel.getSnakes().split("~");
 
@@ -55,6 +57,13 @@ public class GameController {
 
 		for (int i = 0; i < laddersSplit.length; i++) {
 			String[] ladderSplit = laddersSplit[i].split("\\s");
+			
+			if(snakeMap.get(Integer.parseInt(ladderSplit[0]))!= null || snakeMap.get(Integer.parseInt(ladderSplit[1]))!= null){
+				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(ladderSplit[0]));
+				return gameModel;
+			}
+			
+			
 			ladderMap.put(Integer.parseInt(ladderSplit[0]), Integer.parseInt(ladderSplit[1]));
 		}
 		
@@ -67,18 +76,44 @@ public class GameController {
 		Map<Integer, Integer> pitStopMap = new HashMap<Integer, Integer>();
 
 		for (int i = 0; i < memorySplit.length; i++) {
+			
+			if(snakeMap.get(Integer.parseInt(memorySplit[i]))!= null || ladderMap.get(Integer.parseInt(memorySplit[i]))!= null){
+				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(memorySplit[i]));
+				return gameModel;
+			}
+			
 			memoryMap.put(Integer.parseInt(memorySplit[i]), "");
 		}
 
 		for (int i = 0; i < magicSplit.length; i++) {
+			
+			if(snakeMap.get(Integer.parseInt(magicSplit[i]))!= null || ladderMap.get(Integer.parseInt(magicSplit[i]))!= null || memoryMap.get(Integer.parseInt(magicSplit[i]))!= null){
+				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(magicSplit[i]));
+				return gameModel;
+			}
+			
 			magicMap.put(Integer.parseInt(magicSplit[i]), "");
 		}
 
 		for (int i = 0; i < trampolineSplit.length; i++) {
+			if(snakeMap.get(Integer.parseInt(trampolineSplit[i]))!= null || ladderMap.get(Integer.parseInt(trampolineSplit[i]))!= null || 
+					memoryMap.get(Integer.parseInt(trampolineSplit[i]))!= null || magicMap.get(Integer.parseInt(trampolineSplit[i]))!= null){
+				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(trampolineSplit[i]));
+				return gameModel;
+			}
+			
 			trampolineMap.put(Integer.parseInt(trampolineSplit[i]), "");
 		}
 
 		for (int i = 0; i < elevatorSplit.length; i++) {
+			
+			if(snakeMap.get(Integer.parseInt(elevatorSplit[i]))!= null || ladderMap.get(Integer.parseInt(elevatorSplit[i]))!= null || 
+					memoryMap.get(Integer.parseInt(elevatorSplit[i]))!= null || magicMap.get(Integer.parseInt(elevatorSplit[i]))!= null ||
+							trampolineMap.get(Integer.parseInt(elevatorSplit[i]))!= null){
+				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(elevatorSplit[i]));
+				return gameModel;
+			}
+			
 			elevatorMap.put(Integer.parseInt(elevatorSplit[i]), "");
 		}
 
@@ -99,6 +134,14 @@ public class GameController {
 			int pitStop = Integer.parseInt(pitStopSplit[0]);
 
 			int pitStopEnergy = Integer.parseInt(pitStopSplit[1]);
+			
+			if(snakeMap.get(Integer.parseInt(pitStopSplit[i]))!= null || ladderMap.get(Integer.parseInt(pitStopSplit[i]))!= null || 
+					memoryMap.get(Integer.parseInt(pitStopSplit[i]))!= null || magicMap.get(Integer.parseInt(pitStopSplit[i]))!= null ||
+							trampolineMap.get(Integer.parseInt(pitStopSplit[i]))!= null || elevatorMap.get(Integer.parseInt(pitStopSplit[i]))!= null){
+				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(pitStopSplit[i]));
+				return gameModel;
+			}
+			
 			pitStopMap.put(pitStop, pitStopEnergy);
 		}
 
@@ -390,6 +433,7 @@ public class GameController {
 			if (currentPosition < 1) {
 				gameModel.setMessage("Sorry!! You cannot go below 0. Your magic feature is disabled now.");
 				gameModel.setUserLocation(1);
+				gameModel.setP1Energy(gameModel.getNumberOfSquares()/3);
 				gameModel.setP1Magic(false);
 			}
 		} else {
@@ -427,6 +471,7 @@ public class GameController {
 			if (currentPosition < 1) {
 				gameModel.setMessage("Sorry!! You cannot go below 0. Your magic feature is disabled now.");
 				gameModel.setCompLocation(1);
+				gameModel.setP2Energy(gameModel.getNumberOfSquares()/3);
 				gameModel.setP2Magic(false);
 			}
 		}

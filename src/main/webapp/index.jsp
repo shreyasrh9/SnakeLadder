@@ -278,6 +278,7 @@ ul li{
 
 		
 		<h1>Player1 details</h1>
+			<span id="p1En" style="color:green"></span>
 				<table id="p1Details">
 					<thead>
 						<tr style="font-size: 14px;">
@@ -292,6 +293,7 @@ ul li{
 				</table>
 				
 				<h1>Player2 details</h1>
+				<span id="p2En" style="color:green"></span>
 				<table id="p2Details">
 					<thead>
 						<tr style="font-size: 14px;">
@@ -345,13 +347,13 @@ var gameModel;
 				
 				$('#numberOfSquares').val("64");
 
-				$('#memorySquare').val("6");
-				$('#magicSquare').val("10");
-				$('#trampolineSquare').val("12");
-				$('#elevatorSquare').val("14");
-				$('#pitStopSquare').val("16-5");
-				$('#snake1').val("22,8-4");
-				$('#ladder1').val("7,54");
+				$('#memorySquare').val("6,4");
+				$('#magicSquare').val("10,6");
+				$('#trampolineSquare').val("12,5");
+				$('#elevatorSquare').val("14,9");
+				$('#pitStopSquare').val("16-5,56-8");
+				$('#snake1').val("22 8-4~39 28-6");
+				$('#ladder1').val("7 54~15 48");
 				
 				$('#p1Details').dataTable();
 				
@@ -469,6 +471,11 @@ var gameModel;
 				gameModel = response;
 
 				console.log(response.gameHtml);
+				
+				if(response.message != ""){
+					toastr.warning(gameModel.message);
+					return;
+				}
 
 				$('#gameBoard').html(response.gameHtml);
 				
@@ -508,8 +515,11 @@ var gameModel;
 				
 				
 				if(gameModel.p2Chance){
+					$('#p1En').html("P1 Energy :"+gameModel.p1Energy);
+					
 					var p1Table=""; 
-				
+					
+					
 					$.each(gameModel.p1GameStep, function( index, value ) {
 							p1Table+="<tr><td>"+index+"</td><td>"+value+"</td></tr>";
 						});
@@ -517,6 +527,8 @@ var gameModel;
 					$('#p1DetailsBody').html(p1Table);
 					$('#p1Details').dataTable();
 				}else{
+					$('#p2En').html("P2 Energy :"+gameModel.p2Energy);
+				
 					var p2Table=""; 
 					
 					$.each(gameModel.p2GameStep, function( index, value ) {
