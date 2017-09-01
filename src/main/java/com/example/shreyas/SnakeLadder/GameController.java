@@ -50,6 +50,12 @@ public class GameController {
 			String[] snakeSplit = snakesSplit[i].split("\\s");
 			String[] hungerLevelSplit = snakeSplit[1].split("-");
 			snakeMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[0]));
+			
+			if(Integer.parseInt(snakeSplit[0]) > gameModel.getNumberOfSquares() || Integer.parseInt(hungerLevelSplit[1]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(snakeSplit[0]) < 0 || Integer.parseInt(hungerLevelSplit[1]) < 0){
+				gameModel.setMessage(Integer.parseInt(snakeSplit[0])+" exceeding the max/min limit");
+				return gameModel;
+			}
 
 			snakeHungryMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[1]));
 
@@ -64,6 +70,13 @@ public class GameController {
 			if (snakeMap.get(Integer.parseInt(ladderSplit[0])) != null
 					|| snakeMap.get(Integer.parseInt(ladderSplit[1])) != null) {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(ladderSplit[0]));
+				return gameModel;
+			}
+			
+			
+			if(Integer.parseInt(ladderSplit[0]) > gameModel.getNumberOfSquares() || Integer.parseInt(ladderSplit[1]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(ladderSplit[0]) < 0 || Integer.parseInt(ladderSplit[1]) < 0){
+				gameModel.setMessage(Integer.parseInt(ladderSplit[0])+" exceeding the max/min limit");
 				return gameModel;
 			}
 
@@ -86,6 +99,12 @@ public class GameController {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(memorySplit[i]));
 				return gameModel;
 			}
+			
+			if(Integer.parseInt(memorySplit[i]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(memorySplit[i]) < 0){
+				gameModel.setMessage(Integer.parseInt(memorySplit[i])+" exceeding the max/min limit");
+				return gameModel;
+			}
 
 			memoryMap.put(Integer.parseInt(memorySplit[i]), "");
 		}
@@ -99,6 +118,12 @@ public class GameController {
 				return gameModel;
 			}
 
+			if(Integer.parseInt(magicSplit[i]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(magicSplit[i]) < 0){
+				gameModel.setMessage(Integer.parseInt(magicSplit[i])+" exceeding the max/min limit");
+				return gameModel;
+			}
+			
 			magicMap.put(Integer.parseInt(magicSplit[i]), "");
 		}
 
@@ -111,6 +136,12 @@ public class GameController {
 				return gameModel;
 			}
 
+			if(Integer.parseInt(trampolineSplit[0]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(trampolineSplit[i]) < 0){
+				gameModel.setMessage(Integer.parseInt(trampolineSplit[i])+" exceeding the max/min limit");
+				return gameModel;
+			}
+			
 			trampolineMap.put(Integer.parseInt(trampolineSplit[i]), "");
 		}
 
@@ -122,6 +153,12 @@ public class GameController {
 					|| magicMap.get(Integer.parseInt(elevatorSplit[i])) != null
 					|| trampolineMap.get(Integer.parseInt(elevatorSplit[i])) != null) {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(elevatorSplit[i]));
+				return gameModel;
+			}
+			
+			if(Integer.parseInt(elevatorSplit[0]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(elevatorSplit[i]) < 0){
+				gameModel.setMessage(Integer.parseInt(elevatorSplit[i])+" exceeding the max/min limit");
 				return gameModel;
 			}
 
@@ -146,16 +183,21 @@ public class GameController {
 
 			int pitStopEnergy = Integer.parseInt(pitStopSplit[1]);
 
-			if (snakeMap.get(Integer.parseInt(pitStopSplit[i])) != null
-					|| ladderMap.get(Integer.parseInt(pitStopSplit[i])) != null
-					|| memoryMap.get(Integer.parseInt(pitStopSplit[i])) != null
-					|| magicMap.get(Integer.parseInt(pitStopSplit[i])) != null
-					|| trampolineMap.get(Integer.parseInt(pitStopSplit[i])) != null
-					|| elevatorMap.get(Integer.parseInt(pitStopSplit[i])) != null) {
+			if (snakeMap.get(pitStop) != null
+					|| ladderMap.get(pitStop) != null
+					|| memoryMap.get(pitStop) != null
+					|| magicMap.get(pitStop) != null
+					|| trampolineMap.get(pitStop) != null
+					|| elevatorMap.get(pitStop) != null) {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(pitStopSplit[i]));
 				return gameModel;
 			}
 
+			if(Integer.parseInt(pitStopSplit[0]) > gameModel.getNumberOfSquares() 
+					|| Integer.parseInt(pitStopSplit[i]) < 0){
+				gameModel.setMessage(Integer.parseInt(pitStopSplit[i])+" exceeding the max/min limit");
+				return gameModel;
+			}
 			pitStopMap.put(pitStop, pitStopEnergy);
 		}
 
