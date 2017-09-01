@@ -248,6 +248,8 @@ ul li{
 						</div>
 					</div>
 
+<span id="p1Magic" style="color:red"></span>
+<span id="p2Magic" style="color:red"></span>
 
 <div class="wrappers" id="gameBoard">
         
@@ -353,7 +355,7 @@ var gameModel;
 				
 				$('#p1Details').dataTable();
 				
-				$('#p2Details').dataTable();
+				$('#p2Details').dataTable(); 
 				
 			});
 			
@@ -501,19 +503,70 @@ var gameModel;
 				
 				
 				gameModel = response;
+				
+				
+				
+				
+				if(gameModel.p2Chance){
+					var p1Table=""; 
+				
+					$.each(gameModel.p1GameStep, function( index, value ) {
+							p1Table+="<tr><td>"+index+"</td><td>"+value+"</td></tr>";
+						});
+					
+					$('#p1DetailsBody').html(p1Table);
+					$('#p1Details').dataTable();
+				}else{
+					var p2Table=""; 
+					
+					$.each(gameModel.p2GameStep, function( index, value ) {
+							p2Table+="<tr><td>"+index+"</td><td>"+value+"</td></tr>";
+						});
+					$('#p2DetailsBody').html(p2Table);
+					$('#p2Details').dataTable(); 
+				}
+				
+				if(gameModel.message != ""){
+					toastr.warning(gameModel.message);
+				}
 
 				
+				if(gameModel.p1Magic){
+					$('#p1Magic').html("P1- Magic is on.");
+				}else{
+					$('#p1Magic').html("");
+				}
+				
+				if(gameModel.p2Magic){
+					$('#p2Magic').html("P2- Magic is on.");
+				}else{
+					$('#p2Magic').html("");
+				}
 
 				$('#gameBoard').html(response.gameHtml);
 				
-				$('#player1Loc_'+response.userLocation).show();
 				
-				$('#player2Loc_'+response.compLocation).show();
+	$.each(gameModel.snakeMap, function(index, value) {
 
-			}
-		});
-				  },2000);
-		
+						$('#ene_' + index).html("E-" + gameModel.snakeEnergy);
+						
+						$('#ene_' + value).html("E-" + gameModel.snakeEnergy);
+
+					});
+
+					$('#player1Loc_' + response.userLocation).show();
+
+					$('#player2Loc_' + response.compLocation).show();
+
+					if (gameModel.successMessage != "") {
+						toastr.success(gameModel.successMessage);
+						$('#gameBoard').html("");
+					}
+
+				}
+			});
+		}, 2000);
+
 	}
 </script>
 </body>

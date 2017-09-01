@@ -1,5 +1,7 @@
 package com.example.shreyas.SnakeLadder;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
@@ -16,8 +18,8 @@ public class GameModel {
 	private boolean p1Chance;
 	private boolean p2Chance;
 	private String ladders;
-	//private List<Integer> pitStops;
-	private Integer pitStops;
+	private List<Integer> pitStops;
+	
 	private Integer trampoline;
 	private Integer elevator;
 	private Integer numberOfPLayers;
@@ -27,6 +29,17 @@ public class GameModel {
 	private Integer snakeEnergy;
 	private String pitStopSquare;
 	private Integer diceValue;
+	private Integer currentGamePostion;
+	private Integer p1Energy;
+	private Integer p2Energy;
+	private boolean p1Magic;
+	private boolean p2Magic;
+	private Map<Integer, Integer> p1GameStep = new HashMap<Integer, Integer>();
+	private Map<Integer, Integer> p2GameStep = new HashMap<Integer, Integer>();
+	private Integer p1Step;
+	private Integer p2Step;
+	private String message;
+	private String successMessage;
 	
 	
 	
@@ -72,10 +85,10 @@ public class GameModel {
 	public void setNumberOfPLayers(Integer numberOfPLayers) {
 		this.numberOfPLayers = numberOfPLayers;
 	}
-	public Integer getPitStops() {
+	public List<Integer> getPitStops() {
 		return pitStops;
 	}
-	public void setPitStops(Integer pitStops) {
+	public void setPitStops(List<Integer> pitStops) {
 		this.pitStops = pitStops;
 	}
 	public Integer getTrampoline() {
@@ -149,6 +162,72 @@ public class GameModel {
 	}
 	public void setDiceValue(Integer diceValue) {
 		this.diceValue = diceValue;
+	}
+	public Integer getCurrentGamePostion() {
+		return currentGamePostion;
+	}
+	public void setCurrentGamePostion(Integer currentGamePostion) {
+		this.currentGamePostion = currentGamePostion;
+	}
+	public Integer getP1Energy() {
+		return p1Energy;
+	}
+	public void setP1Energy(Integer p1Energy) {
+		this.p1Energy = p1Energy;
+	}
+	public Integer getP2Energy() {
+		return p2Energy;
+	}
+	public void setP2Energy(Integer p2Energy) {
+		this.p2Energy = p2Energy;
+	}
+	public boolean isP1Magic() {
+		return p1Magic;
+	}
+	public void setP1Magic(boolean p1Magic) {
+		this.p1Magic = p1Magic;
+	}
+	public boolean isP2Magic() {
+		return p2Magic;
+	}
+	public void setP2Magic(boolean p2Magic) {
+		this.p2Magic = p2Magic;
+	}
+	public Map<Integer, Integer> getP1GameStep() {
+		return p1GameStep;
+	}
+	public void setP1GameStep(Map<Integer, Integer> p1GameStep) {
+		this.p1GameStep = p1GameStep;
+	}
+	public Map<Integer, Integer> getP2GameStep() {
+		return p2GameStep;
+	}
+	public void setP2GameStep(Map<Integer, Integer> p2GameStep) {
+		this.p2GameStep = p2GameStep;
+	}
+	public Integer getP1Step() {
+		return p1Step;
+	}
+	public void setP1Step(Integer p1Step) {
+		this.p1Step = p1Step;
+	}
+	public Integer getP2Step() {
+		return p2Step;
+	}
+	public void setP2Step(Integer p2Step) {
+		this.p2Step = p2Step;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getSuccessMessage() {
+		return successMessage;
+	}
+	public void setSuccessMessage(String successMessage) {
+		this.successMessage = successMessage;
 	}
 	
 	

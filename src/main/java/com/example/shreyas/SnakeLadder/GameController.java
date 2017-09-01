@@ -73,9 +73,9 @@ public class GameController {
 		String html = "";
 
 		int sqrt = (int) Math.sqrt(number);
-		
+
 		gameModel.setUserLocation(1);
-		
+
 		gameModel.setCompLocation(1);
 
 		int loopCount = 0;
@@ -133,12 +133,14 @@ public class GameController {
 
 				for (Map.Entry<Integer, Integer> entry : gameModel.getSnakeMap().entrySet()) {
 					if (x == entry.getKey()) {
-						ls = "<div> S(" + x + "," + entry.getValue() + ")E-" + gameModel.getSnakeEnergy() + "</div>";
+						ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getValue() + ")<span id='ene_" + x
+								+ "'>E-" + gameModel.getSnakeEnergy() + "</span></div>";
 						break;
 					}
 
 					if (x == entry.getValue()) {
-						ls = "<div> S(" + x + "," + entry.getKey() + ")E-" + gameModel.getSnakeEnergy() + "</div>";
+						ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x
+								+ "'>E-" + gameModel.getSnakeEnergy() + "</span></div>";
 						break;
 					}
 				}
@@ -174,7 +176,9 @@ public class GameController {
 					ulClosed = false;
 				}
 				html += "<li><div id='div_" + counter + "'>" + counter + "</div>" + ls + ps + elevator + trampoline
-						+ memory + magic + "<span id='player1Loc_"+counter+"' class='glyphicon glyphicon-asterisk' style='display:none'>P1</span><span id='player2Loc_"+counter+"' class='glyphicon glyphicon-star' style='display:none'>P2</span></li>";
+						+ memory + magic + "<span id='player1Loc_" + counter
+						+ "' class='glyphicon glyphicon-asterisk' style='display:none'>P1</span><span id='player2Loc_"
+						+ counter + "' class='glyphicon glyphicon-star' style='display:none'>P2</span></li>";
 
 			}
 
@@ -185,9 +189,14 @@ public class GameController {
 		gameModel.setGameHtml(html);
 
 		gameModel.setEnergy(energy);
+		gameModel.setP1Energy(energy);
+		gameModel.setP2Energy(energy);
 		gameModel.setUserLocation(1);
 		gameModel.setCompLocation(1);
-		
+		gameModel.setP1Step(1);
+		gameModel.setP2Step(1);
+		gameModel.setPitStops(pitStops);
+
 		gameModel.setP1Chance(true);
 		gameModel.setP2Chance(false);
 
@@ -197,25 +206,181 @@ public class GameController {
 
 		return gameModel;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/diceRolled", method = RequestMethod.POST)
-	public GameModel diceRolled(@RequestBody String gameDetails, Model model, HttpSession session)
-			throws Exception {
+	public GameModel diceRolled(@RequestBody String gameDetails, Model model, HttpSession session) throws Exception {
 		GameModel gameModel = new GsonBuilder().create().fromJson(gameDetails, GameModel.class);
 		int currentPosition = 0;
-		if(gameModel.isP1Chance()){
+
+		gameModel.setMessage("");
+		gameModel.setSuccessMessage("");
+
+		if (gameModel.isP1Chance()) {
+
 			currentPosition = gameModel.getUserLocation();
+			if (currentPosition != 1) {
+				gameModel.setP1Step(gameModel.getP1Step() + 1);
+			}
+			if (gameModel.getP1Energy() == 0) {
+				gameModel.setUserLocation(1);
+				return gameModel;
+			}
+
+			gameModel.setP1Energy(gameModel.getP1Energy() - 1);
+		} else {
+
+			if (gameModel.getP2Energy() == 0) {
+				gameModel.setCompLocation(1);
+				return gameModel;
+			}
+
+			currentPosition = gameModel.getCompLocation();
+			if (currentPosition != 1) {
+				gameModel.setP2Step(gameModel.getP2Step() + 1);
+			}
+			gameModel.setP2Energy(gameModel.getP2Energy() - 1);
+		}
+
+		if (gameModel.isP1Chance()) {
+			if (gameModel.isP1Magic()) {
+				currentPosition -= gameModel.getDiceValue();
+			} else {
+				currentPosition += gameModel.getDiceValue();
+			}
+		} else {
+
+			if (gameModel.isP2Magic()) {
+				currentPosition -= gameModel.getDiceValue();
+			} else {
+				currentPosition += gameModel.getDiceValue();
+			}
+
+		}
+
+		if (currentPosition == gameModel.getMagicSquare()) {
+			if (gameModel.isP1Chance()) {
+				if (gameModel.isP1Magic()) {
+					gameModel.setP1Magic(false);
+				} else {
+					gameModel.setP1Magic(true);
+				}
+			} else {
+				if (gameModel.isP2Magic()) {
+					gameModel.setP2Magic(false);
+				} else {
+					gameModel.setP2Magic(true);
+				}
+			}
+		}
+
+		if (gameModel.getTrampoline() == currentPosition) {
+			currentPosition += gameModel.getDiceValue();
+		}
+
+		if (gameModel.getElevator() == currentPosition) {
+			int x = gameModel.getDiceValue();
+
+			if (x % 2 == 0) {
+				currentPosition = ((int) Math.sqrt(gameModel.getNumberOfSquares()) * x) + currentPosition;
+			} else {
+				currentPosition = (((int) Math.sqrt(gameModel.getNumberOfSquares()) * (x + 1)) - (currentPosition - 1));
+			}
+
+		}
+
+		if (gameModel.getLadderMap().get(currentPosition) != null) {
+			if (gameModel.getUserLocation() != gameModel.getLadderMap().get(currentPosition)
+					&& gameModel.getCompLocation() != gameModel.getLadderMap().get(currentPosition))
+				currentPosition = gameModel.getLadderMap().get(currentPosition);
+		}
+
+		if (gameModel.getSnakeMap().get(currentPosition) != null) {
+			if (gameModel.getSnakeEnergy() > 0) {
+				currentPosition = gameModel.getSnakeMap().get(currentPosition);
+				gameModel.setSnakeEnergy(gameModel.getSnakeEnergy() - 1);
+			}
+		}
+
+		if (gameModel.isP1Chance()) {
+
+			if (currentPosition == gameModel.getNumberOfSquares()) {
+				gameModel.setSuccessMessage("Congrats!!! P1 Wins.");
+				return gameModel;
+			}
+
+			if (currentPosition > gameModel.getNumberOfSquares()) {
+				gameModel.setMessage("Sorry!! You should reach " + gameModel.getNumberOfSquares()
+						+ " to win. You cannot exceed " + gameModel.getNumberOfSquares());
+			} else {
+				gameModel.setUserLocation(currentPosition);
+			}
 			gameModel.setP1Chance(false);
 			gameModel.setP2Chance(true);
-		}else{
-			currentPosition = gameModel.getCompLocation();
+			for (Integer pitStop : gameModel.getPitStops()) {
+				if (currentPosition == pitStop) {
+					gameModel.setP1Energy(gameModel.getP1Energy() + gameModel.getEnergy());
+				}
+			}
+
+			if (currentPosition == gameModel.getMemorySqaure()) {
+				if (gameModel.getP1GameStep().get(gameModel.getDiceValue()) != null) {
+					gameModel.setUserLocation(gameModel.getP1GameStep().get(gameModel.getDiceValue()));
+				} else {
+					gameModel.setUserLocation(1);
+				}
+			}
+
+			Map<Integer, Integer> p1Step = gameModel.getP1GameStep();
+			p1Step.put(gameModel.getP1Step(), gameModel.getUserLocation());
+			gameModel.setP1GameStep(p1Step);
+			if (currentPosition < 1) {
+				gameModel.setMessage("Sorry!! You cannot go below 0. Your magic feature is disabled now.");
+				gameModel.setUserLocation(1);
+				gameModel.setP1Magic(false);
+			}
+		} else {
+
+			if (currentPosition == gameModel.getNumberOfSquares()) {
+				gameModel.setSuccessMessage("Congrats!!! P2 Wins.");
+				gameModel = null;
+				return gameModel;
+			}
+
+			if (currentPosition > gameModel.getNumberOfSquares()) {
+				gameModel.setMessage("Sorry!! You should reach " + gameModel.getNumberOfSquares()
+						+ " to win. You cannot exceed " + gameModel.getNumberOfSquares());
+			} else {
+				gameModel.setCompLocation(currentPosition);
+			}
 			gameModel.setP1Chance(true);
 			gameModel.setP2Chance(false);
+			for (Integer pitStop : gameModel.getPitStops()) {
+				if (currentPosition == pitStop) {
+					gameModel.setP2Energy(gameModel.getP2Energy() + gameModel.getEnergy());
+				}
+			}
+
+			if (currentPosition == gameModel.getMemorySqaure()) {
+				if (gameModel.getP1GameStep().get(gameModel.getDiceValue()) != null) {
+					gameModel.setCompLocation(gameModel.getP2GameStep().get(gameModel.getDiceValue()));
+				} else {
+					gameModel.setCompLocation(1);
+				}
+			}
+
+			Map<Integer, Integer> p2Step = gameModel.getP2GameStep();
+			p2Step.put(gameModel.getP2Step(), gameModel.getCompLocation());
+			gameModel.setP2GameStep(p2Step);
+			if (currentPosition < 1) {
+				gameModel.setMessage("Sorry!! You cannot go below 0. Your magic feature is disabled now.");
+				gameModel.setCompLocation(1);
+				gameModel.setP2Magic(false);
+			}
 		}
-		
-		
-		
+
+		gameModel.setCurrentGamePostion(currentPosition);
+
 		return gameModel;
 	}
 
