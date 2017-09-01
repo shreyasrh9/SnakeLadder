@@ -10,6 +10,13 @@ import org.springframework.context.annotation.Scope;
 public class GameModel {
 	private Map<Integer, Integer> ladderMap;
 	private Map<Integer, Integer> snakeMap;
+	private Map<Integer, Integer> snakeMapEnergy;
+	private Map<Integer, Integer> ladderMapEnergy;
+	private Map<Integer, String> memoryMap;
+	private Map<Integer, String> magicMap;
+	private Map<Integer, String> trampolineMap;
+	private Map<Integer, String> elevatorMap;
+	private Map<Integer, Integer> pitStopMap;
 	private String gameHtml;
 	private Integer energy;
 	private Integer userLocation;
@@ -18,15 +25,14 @@ public class GameModel {
 	private boolean p1Chance;
 	private boolean p2Chance;
 	private String ladders;
-	private List<Integer> pitStops;
 	
-	private Integer trampoline;
-	private Integer elevator;
+	
+	private String trampoline;
+	private String elevator;
 	private Integer numberOfPLayers;
-	private Integer memorySqaure;
-	private Integer magicSquare;
+	private String memorySqaure;
+	private String magicSquare;
 	private Integer numberOfSquares;
-	private Integer snakeEnergy;
 	private String pitStopSquare;
 	private Integer diceValue;
 	private Integer currentGamePostion;
@@ -85,35 +91,35 @@ public class GameModel {
 	public void setNumberOfPLayers(Integer numberOfPLayers) {
 		this.numberOfPLayers = numberOfPLayers;
 	}
-	public List<Integer> getPitStops() {
-		return pitStops;
+	public Map<Integer, String> getTrampolineMap() {
+		return trampolineMap;
 	}
-	public void setPitStops(List<Integer> pitStops) {
-		this.pitStops = pitStops;
+	public void setTrampolineMap(Map<Integer, String> trampolineMap) {
+		this.trampolineMap = trampolineMap;
 	}
-	public Integer getTrampoline() {
+	public Map<Integer, String> getElevatorMap() {
+		return elevatorMap;
+	}
+	public void setElevatorMap(Map<Integer, String> elevatorMap) {
+		this.elevatorMap = elevatorMap;
+	}
+	public String getTrampoline() {
 		return trampoline;
 	}
-	public void setTrampoline(Integer trampoline) {
+	public void setTrampoline(String trampoline) {
 		this.trampoline = trampoline;
 	}
-	public Integer getElevator() {
+	public String getElevator() {
 		return elevator;
 	}
-	public void setElevator(Integer elevator) {
+	public void setElevator(String elevator) {
 		this.elevator = elevator;
 	}
-	public Integer getMemorySqaure() {
+	public String getMemorySqaure() {
 		return memorySqaure;
 	}
-	public void setMemorySqaure(Integer memorySqaure) {
+	public void setMemorySqaure(String memorySqaure) {
 		this.memorySqaure = memorySqaure;
-	}
-	public Integer getMagicSquare() {
-		return magicSquare;
-	}
-	public void setMagicSquare(Integer magicSquare) {
-		this.magicSquare = magicSquare;
 	}
 	public String getSnakes() {
 		return snakes;
@@ -132,12 +138,6 @@ public class GameModel {
 	}
 	public void setNumberOfSquares(Integer numberOfSquares) {
 		this.numberOfSquares = numberOfSquares;
-	}
-	public Integer getSnakeEnergy() {
-		return snakeEnergy;
-	}
-	public void setSnakeEnergy(Integer snakeEnergy) {
-		this.snakeEnergy = snakeEnergy;
 	}
 	public String getPitStopSquare() {
 		return pitStopSquare;
@@ -228,6 +228,42 @@ public class GameModel {
 	}
 	public void setSuccessMessage(String successMessage) {
 		this.successMessage = successMessage;
+	}
+	public Map<Integer, String> getMemoryMap() {
+		return memoryMap;
+	}
+	public void setMemoryMap(Map<Integer, String> memoryMap) {
+		this.memoryMap = memoryMap;
+	}
+	public Map<Integer, String> getMagicMap() {
+		return magicMap;
+	}
+	public void setMagicMap(Map<Integer, String> magicMap) {
+		this.magicMap = magicMap;
+	}
+	public String getMagicSquare() {
+		return magicSquare;
+	}
+	public void setMagicSquare(String magicSquare) {
+		this.magicSquare = magicSquare;
+	}
+	public Map<Integer, Integer> getPitStopMap() {
+		return pitStopMap;
+	}
+	public void setPitStopMap(Map<Integer, Integer> pitStopMap) {
+		this.pitStopMap = pitStopMap;
+	}
+	public Map<Integer, Integer> getSnakeMapEnergy() {
+		return snakeMapEnergy;
+	}
+	public void setSnakeMapEnergy(Map<Integer, Integer> snakeMapEnergy) {
+		this.snakeMapEnergy = snakeMapEnergy;
+	}
+	public Map<Integer, Integer> getLadderMapEnergy() {
+		return ladderMapEnergy;
+	}
+	public void setLadderMapEnergy(Map<Integer, Integer> ladderMapEnergy) {
+		this.ladderMapEnergy = ladderMapEnergy;
 	}
 	
 	

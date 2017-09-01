@@ -156,7 +156,7 @@ ul li{
 											<div class="col-xs-4" style="margin-left:10px">
 												<div class="form-group">
 													<label>Memory square</label> <input id="memorySquare"
-														type="number" class="form-control">
+														type="text" class="form-control">
 												</div>
 											</div>
 											
@@ -164,7 +164,7 @@ ul li{
 											<div class="col-xs-4" style="margin-left:10px">
 												<div class="form-group">
 													<label>Magic square</label> <input id="magicSquare"
-														type="number" class="form-control">
+														type="text" class="form-control">
 												</div>
 											</div>
 											
@@ -181,14 +181,14 @@ ul li{
 											<div class="col-xs-4" style="margin-left: 13%;">
 												<div class="form-group">
 													<label>Trampoline square</label> <input id="trampolineSquare"
-														type="number" class="form-control">
+														type="text" class="form-control">
 												</div>
 											</div>
 											
 											<div class="col-xs-4" style="margin-left:10px">
 												<div class="form-group">
 													<label>Elevator square</label> <input id="elevatorSquare"
-														type="number" class="form-control">
+														type="text" class="form-control">
 												</div>
 											</div>
 											

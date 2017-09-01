@@ -1,8 +1,6 @@
 package com.example.shreyas.SnakeLadder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -30,31 +28,59 @@ public class GameController {
 			throws Exception {
 
 		GameModel gameModel = new GsonBuilder().create().fromJson(gameDetails, GameModel.class);
-		List<Integer> pitStops = new ArrayList<Integer>();
 
-		List<Integer> trampolines = new ArrayList<Integer>();
+		String[] snakesSplit = gameModel.getSnakes().split("~");
 
-		List<Integer> elevators = new ArrayList<Integer>();
+		String[] laddersSplit = gameModel.getLadders().split("~");
 
-		List<Integer> magicSquares = new ArrayList<Integer>();
-
-		List<Integer> memorySqaures = new ArrayList<Integer>();
-
-		String[] snakeSplit = gameModel.getSnakes().split(",");
-		String[] ladderSplit = gameModel.getLadders().split(",");
-
-		String[] hungerLevelSplit = snakeSplit[1].split("-");
+		String[] memorySplit = gameModel.getMemorySqaure().split(",");
+		String[] magicSplit = gameModel.getMagicSquare().split(",");
+		String[] trampolineSplit = gameModel.getTrampoline().split(",");
+		String[] elevatorSplit = gameModel.getElevator().split(",");
 
 		Map<Integer, Integer> snakeMap = new HashMap<Integer, Integer>();
-		snakeMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[0]));
-
-		gameModel.setSnakeEnergy(Integer.parseInt(hungerLevelSplit[1]));
-
+		Map<Integer, Integer> snakeHungryMap = new HashMap<Integer, Integer>();
 		Map<Integer, Integer> ladderMap = new HashMap<Integer, Integer>();
-		ladderMap.put(Integer.parseInt(ladderSplit[0]), Integer.parseInt(ladderSplit[1]));
 
-		gameModel.setLadderMap(ladderMap);
+		for (int i = 0; i < snakesSplit.length; i++) {
+			String[] snakeSplit = snakesSplit[i].split("\\s");
+			String[] hungerLevelSplit = snakeSplit[1].split("-");
+			snakeMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[0]));
+
+			snakeHungryMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[1]));
+			
+		}
 		gameModel.setSnakeMap(snakeMap);
+		gameModel.setSnakeMapEnergy(snakeHungryMap);
+
+		for (int i = 0; i < laddersSplit.length; i++) {
+			String[] ladderSplit = laddersSplit[i].split("\\s");
+			ladderMap.put(Integer.parseInt(ladderSplit[0]), Integer.parseInt(ladderSplit[1]));
+		}
+		
+		gameModel.setLadderMap(ladderMap);
+		
+		Map<Integer, String> memoryMap = new HashMap<Integer, String>();
+		Map<Integer, String> magicMap = new HashMap<Integer, String>();
+		Map<Integer, String> trampolineMap = new HashMap<Integer, String>();
+		Map<Integer, String> elevatorMap = new HashMap<Integer, String>();
+		Map<Integer, Integer> pitStopMap = new HashMap<Integer, Integer>();
+
+		for (int i = 0; i < memorySplit.length; i++) {
+			memoryMap.put(Integer.parseInt(memorySplit[i]), "");
+		}
+
+		for (int i = 0; i < magicSplit.length; i++) {
+			magicMap.put(Integer.parseInt(magicSplit[i]), "");
+		}
+
+		for (int i = 0; i < trampolineSplit.length; i++) {
+			trampolineMap.put(Integer.parseInt(trampolineSplit[i]), "");
+		}
+
+		for (int i = 0; i < elevatorSplit.length; i++) {
+			elevatorMap.put(Integer.parseInt(elevatorSplit[i]), "");
+		}
 
 		int iteration = -1;
 
@@ -64,11 +90,17 @@ public class GameController {
 
 		int energy = number / 3;
 
-		String[] pitStopSplit = gameModel.getPitStopSquare().split("-");
+		String[] pitStopsSplit = gameModel.getPitStopSquare().split(",");
 
-		int pitStop = Integer.parseInt(pitStopSplit[0]);
+		for (int i = 0; i < pitStopsSplit.length; i++) {
 
-		int pitStopEnergy = Integer.parseInt(pitStopSplit[1]);
+			String[] pitStopSplit = pitStopsSplit[i].split("-");
+
+			int pitStop = Integer.parseInt(pitStopSplit[0]);
+
+			int pitStopEnergy = Integer.parseInt(pitStopSplit[1]);
+			pitStopMap.put(pitStop, pitStopEnergy);
+		}
 
 		String html = "";
 
@@ -77,6 +109,13 @@ public class GameController {
 		gameModel.setUserLocation(1);
 
 		gameModel.setCompLocation(1);
+		gameModel.setPitStopMap(pitStopMap);
+		gameModel.setTrampolineMap(trampolineMap);
+		gameModel.setElevatorMap(elevatorMap);
+		gameModel.setMemoryMap(memoryMap);
+		gameModel.setMagicMap(magicMap);
+		gameModel.setLadderMap(ladderMap);
+		gameModel.setSnakeMap(snakeMap);
 
 		int loopCount = 0;
 		boolean ulStarted = false;
@@ -133,41 +172,57 @@ public class GameController {
 
 				for (Map.Entry<Integer, Integer> entry : gameModel.getSnakeMap().entrySet()) {
 					if (x == entry.getKey()) {
+						if(gameModel.getSnakeMapEnergy().get(x) == null){
+							ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getValue() + ")<span id='ene_" + x
+									+ "'></span></div>";
+							break;
+						}
 						ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getValue() + ")<span id='ene_" + x
-								+ "'>E-" + gameModel.getSnakeEnergy() + "</span></div>";
+								+ "'>E-" + gameModel.getSnakeMapEnergy().get(x) + "</span></div>";
 						break;
 					}
 
 					if (x == entry.getValue()) {
-						ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x
-								+ "'>E-" + gameModel.getSnakeEnergy() + "</span></div>";
+						if(gameModel.getSnakeMapEnergy().get(x) == null){
+							ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x + "'></span></div>";
+							break;
+						}
+						ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x + "'>E-"
+								+ gameModel.getSnakeMapEnergy().get(x) + "</span></div>";
 						break;
 					}
 				}
 
-				if (counter == pitStop) {
-					ps = "<div id='ps_" + counter + "'>ps - " + pitStopEnergy + "</div>";
-					pitStops.add(counter);
+				if (gameModel.getPitStopMap().get(counter) != null) {
+					ps = "<div id='ps_" + counter + "'>ps - " + gameModel.getPitStopMap().get(counter) + "</div>";
+
 				}
 
-				if (counter == gameModel.getTrampoline()) {
-					trampoline = "<div id='trampoline_" + counter + "'>trampoline </div>";
-					trampolines.add(counter);
+				for (Map.Entry<Integer, String> entry : gameModel.getTrampolineMap().entrySet()) {
+					if (counter == entry.getKey()) {
+						trampoline = "<div id='trampoline_" + counter + "'>trampoline </div>";
+						break;
+					}
 				}
 
-				if (counter == gameModel.getElevator()) {
-					elevator = "<div id='elevator_" + counter + "'>elevator </div>";
-					elevators.add(counter);
+				for (Map.Entry<Integer, String> entry : gameModel.getElevatorMap().entrySet()) {
+					if (counter == entry.getKey()) {
+						elevator = "<div id='elevator_" + counter + "'>elevator </div>";
+						break;
+					}
+				}
+				for (Map.Entry<Integer, String> entry : gameModel.getMemoryMap().entrySet()) {
+					if (counter == entry.getKey()) {
+						memory = "<div id='memory_" + counter + "'>memory </div>";
+						break;
+					}
 				}
 
-				if (counter == gameModel.getMemorySqaure()) {
-					memory = "<div id='memory_" + counter + "'>memory </div>";
-					memorySqaures.add(counter);
-				}
-
-				if (counter == gameModel.getMagicSquare()) {
-					magic = "<div id='magic_" + counter + "'>magic </div>";
-					magicSquares.add(counter);
+				for (Map.Entry<Integer, String> entry : gameModel.getMagicMap().entrySet()) {
+					if (counter == entry.getKey()) {
+						magic = "<div id='magic_" + counter + "'>magic </div>";
+						break;
+					}
 				}
 
 				if (!ulStarted && ulClosed) {
@@ -195,7 +250,6 @@ public class GameController {
 		gameModel.setCompLocation(1);
 		gameModel.setP1Step(1);
 		gameModel.setP2Step(1);
-		gameModel.setPitStops(pitStops);
 
 		gameModel.setP1Chance(true);
 		gameModel.setP2Chance(false);
@@ -258,7 +312,7 @@ public class GameController {
 
 		}
 
-		if (currentPosition == gameModel.getMagicSquare()) {
+		if (gameModel.getMagicMap().get(currentPosition) != null) {
 			if (gameModel.isP1Chance()) {
 				if (gameModel.isP1Magic()) {
 					gameModel.setP1Magic(false);
@@ -274,11 +328,11 @@ public class GameController {
 			}
 		}
 
-		if (gameModel.getTrampoline() == currentPosition) {
+		if (gameModel.getTrampolineMap().get(currentPosition) != null) {
 			currentPosition += gameModel.getDiceValue();
 		}
 
-		if (gameModel.getElevator() == currentPosition) {
+		if (gameModel.getElevatorMap().get(currentPosition) != null) {
 			int x = gameModel.getDiceValue();
 
 			if (x % 2 == 0) {
@@ -296,9 +350,9 @@ public class GameController {
 		}
 
 		if (gameModel.getSnakeMap().get(currentPosition) != null) {
-			if (gameModel.getSnakeEnergy() > 0) {
+			if (gameModel.getSnakeMapEnergy().get(currentPosition) > 0) {
 				currentPosition = gameModel.getSnakeMap().get(currentPosition);
-				gameModel.setSnakeEnergy(gameModel.getSnakeEnergy() - 1);
+				gameModel.getSnakeMapEnergy().put(currentPosition, gameModel.getSnakeMapEnergy().get(currentPosition) - 1);
 			}
 		}
 
@@ -317,13 +371,12 @@ public class GameController {
 			}
 			gameModel.setP1Chance(false);
 			gameModel.setP2Chance(true);
-			for (Integer pitStop : gameModel.getPitStops()) {
-				if (currentPosition == pitStop) {
-					gameModel.setP1Energy(gameModel.getP1Energy() + gameModel.getEnergy());
-				}
+
+			if (gameModel.getPitStopMap().get(currentPosition) != null) {
+				gameModel.setP1Energy(gameModel.getP1Energy() + gameModel.getPitStopMap().get(currentPosition));
 			}
 
-			if (currentPosition == gameModel.getMemorySqaure()) {
+			if (gameModel.getMemoryMap().get(currentPosition) != null) {
 				if (gameModel.getP1GameStep().get(gameModel.getDiceValue()) != null) {
 					gameModel.setUserLocation(gameModel.getP1GameStep().get(gameModel.getDiceValue()));
 				} else {
@@ -355,13 +408,12 @@ public class GameController {
 			}
 			gameModel.setP1Chance(true);
 			gameModel.setP2Chance(false);
-			for (Integer pitStop : gameModel.getPitStops()) {
-				if (currentPosition == pitStop) {
-					gameModel.setP2Energy(gameModel.getP2Energy() + gameModel.getEnergy());
-				}
+
+			if (gameModel.getPitStopMap().get(currentPosition) != null) {
+				gameModel.setP2Energy(gameModel.getP2Energy() + gameModel.getPitStopMap().get(currentPosition));
 			}
 
-			if (currentPosition == gameModel.getMemorySqaure()) {
+			if (gameModel.getMemoryMap().get(currentPosition) != null) {
 				if (gameModel.getP1GameStep().get(gameModel.getDiceValue()) != null) {
 					gameModel.setCompLocation(gameModel.getP2GameStep().get(gameModel.getDiceValue()));
 				} else {
