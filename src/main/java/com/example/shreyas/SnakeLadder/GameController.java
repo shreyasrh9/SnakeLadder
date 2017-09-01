@@ -50,10 +50,11 @@ public class GameController {
 			String[] snakeSplit = snakesSplit[i].split("\\s");
 			String[] hungerLevelSplit = snakeSplit[1].split("-");
 			snakeMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[0]));
-			
-			if(Integer.parseInt(snakeSplit[0]) > gameModel.getNumberOfSquares() || Integer.parseInt(hungerLevelSplit[1]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(snakeSplit[0]) < 0 || Integer.parseInt(hungerLevelSplit[1]) < 0){
-				gameModel.setMessage(Integer.parseInt(snakeSplit[0])+" exceeding the max/min limit");
+
+			if (Integer.parseInt(snakeSplit[0]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(hungerLevelSplit[1]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(snakeSplit[0]) < 0 || Integer.parseInt(hungerLevelSplit[1]) < 0) {
+				gameModel.setMessage(Integer.parseInt(snakeSplit[0]) + " exceeding the max/min limit");
 				return gameModel;
 			}
 
@@ -72,11 +73,11 @@ public class GameController {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(ladderSplit[0]));
 				return gameModel;
 			}
-			
-			
-			if(Integer.parseInt(ladderSplit[0]) > gameModel.getNumberOfSquares() || Integer.parseInt(ladderSplit[1]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(ladderSplit[0]) < 0 || Integer.parseInt(ladderSplit[1]) < 0){
-				gameModel.setMessage(Integer.parseInt(ladderSplit[0])+" exceeding the max/min limit");
+
+			if (Integer.parseInt(ladderSplit[0]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(ladderSplit[1]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(ladderSplit[0]) < 0 || Integer.parseInt(ladderSplit[1]) < 0) {
+				gameModel.setMessage(Integer.parseInt(ladderSplit[0]) + " exceeding the max/min limit");
 				return gameModel;
 			}
 
@@ -99,10 +100,10 @@ public class GameController {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(memorySplit[i]));
 				return gameModel;
 			}
-			
-			if(Integer.parseInt(memorySplit[i]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(memorySplit[i]) < 0){
-				gameModel.setMessage(Integer.parseInt(memorySplit[i])+" exceeding the max/min limit");
+
+			if (Integer.parseInt(memorySplit[i]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(memorySplit[i]) < 0) {
+				gameModel.setMessage(Integer.parseInt(memorySplit[i]) + " exceeding the max/min limit");
 				return gameModel;
 			}
 
@@ -118,12 +119,12 @@ public class GameController {
 				return gameModel;
 			}
 
-			if(Integer.parseInt(magicSplit[i]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(magicSplit[i]) < 0){
-				gameModel.setMessage(Integer.parseInt(magicSplit[i])+" exceeding the max/min limit");
+			if (Integer.parseInt(magicSplit[i]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(magicSplit[i]) < 0) {
+				gameModel.setMessage(Integer.parseInt(magicSplit[i]) + " exceeding the max/min limit");
 				return gameModel;
 			}
-			
+
 			magicMap.put(Integer.parseInt(magicSplit[i]), "");
 		}
 
@@ -136,12 +137,12 @@ public class GameController {
 				return gameModel;
 			}
 
-			if(Integer.parseInt(trampolineSplit[0]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(trampolineSplit[i]) < 0){
-				gameModel.setMessage(Integer.parseInt(trampolineSplit[i])+" exceeding the max/min limit");
+			if (Integer.parseInt(trampolineSplit[0]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(trampolineSplit[i]) < 0) {
+				gameModel.setMessage(Integer.parseInt(trampolineSplit[i]) + " exceeding the max/min limit");
 				return gameModel;
 			}
-			
+
 			trampolineMap.put(Integer.parseInt(trampolineSplit[i]), "");
 		}
 
@@ -155,10 +156,10 @@ public class GameController {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(elevatorSplit[i]));
 				return gameModel;
 			}
-			
-			if(Integer.parseInt(elevatorSplit[0]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(elevatorSplit[i]) < 0){
-				gameModel.setMessage(Integer.parseInt(elevatorSplit[i])+" exceeding the max/min limit");
+
+			if (Integer.parseInt(elevatorSplit[0]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(elevatorSplit[i]) < 0) {
+				gameModel.setMessage(Integer.parseInt(elevatorSplit[i]) + " exceeding the max/min limit");
 				return gameModel;
 			}
 
@@ -183,19 +184,16 @@ public class GameController {
 
 			int pitStopEnergy = Integer.parseInt(pitStopSplit[1]);
 
-			if (snakeMap.get(pitStop) != null
-					|| ladderMap.get(pitStop) != null
-					|| memoryMap.get(pitStop) != null
-					|| magicMap.get(pitStop) != null
-					|| trampolineMap.get(pitStop) != null
+			if (snakeMap.get(pitStop) != null || ladderMap.get(pitStop) != null || memoryMap.get(pitStop) != null
+					|| magicMap.get(pitStop) != null || trampolineMap.get(pitStop) != null
 					|| elevatorMap.get(pitStop) != null) {
 				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(pitStopSplit[i]));
 				return gameModel;
 			}
 
-			if(Integer.parseInt(pitStopSplit[0]) > gameModel.getNumberOfSquares() 
-					|| Integer.parseInt(pitStopSplit[i]) < 0){
-				gameModel.setMessage(Integer.parseInt(pitStopSplit[i])+" exceeding the max/min limit");
+			if (Integer.parseInt(pitStopSplit[0]) > gameModel.getNumberOfSquares()
+					|| Integer.parseInt(pitStopSplit[i]) < 0) {
+				gameModel.setMessage(Integer.parseInt(pitStopSplit[i]) + " exceeding the max/min limit");
 				return gameModel;
 			}
 			pitStopMap.put(pitStop, pitStopEnergy);
@@ -391,8 +389,7 @@ public class GameController {
 			gameModel.setP2Energy(gameModel.getP2Energy() - 1);
 		}
 
-		
-		//Checking for magic condition
+		// Checking for magic condition
 		if (gameModel.isP1Chance()) {
 			if (gameModel.isP1Magic()) {
 				currentPosition -= gameModel.getDiceValue();
@@ -409,7 +406,7 @@ public class GameController {
 
 		}
 
-		//Toggling magic scenarios
+		// Toggling magic scenarios
 		if (gameModel.getMagicMap().get(currentPosition) != null) {
 			if (gameModel.isP1Chance()) {
 				if (gameModel.isP1Magic()) {
@@ -425,44 +422,50 @@ public class GameController {
 				}
 			}
 		}
-		
-		//checking for trampoline condition
+
+		// checking for trampoline condition
 
 		if (gameModel.getTrampolineMap().get(currentPosition) != null) {
 			currentPosition += gameModel.getDiceValue();
 		}
 
-		//checking for elevator condition
+		// checking for elevator condition
 		if (gameModel.getElevatorMap().get(currentPosition) != null) {
-			int x = gameModel.getDiceValue();
-
-			if (x % 2 == 0) {
-				currentPosition = ((int) Math.sqrt(gameModel.getNumberOfSquares()) * x) + currentPosition;
+			int sqrt = (int) Math.sqrt(gameModel.getNumberOfSquares());
+			int temp = currentPosition / sqrt;
+			int tempDiceValue = gameModel.getDiceValue() + temp;
+			int tempCurrentPos = 0;
+			if (temp % 2 == 0) {
+				tempCurrentPos = currentPosition % sqrt;
 			} else {
-				currentPosition = (((int) Math.sqrt(gameModel.getNumberOfSquares()) * (x + 1)) - (currentPosition - 1));
+				tempCurrentPos = ((sqrt * (temp + 1)) - currentPosition) + 1;
 			}
 
+			if (tempDiceValue % 2 == 0) {
+				currentPosition = (sqrt * tempDiceValue) + tempCurrentPos;
+			} else {
+				currentPosition = (sqrt * (tempDiceValue + 1)) - (tempCurrentPos - 1);
+			}
 		}
 
-		//checking for ladder condition
+		// checking for ladder condition
 		if (gameModel.getLadderMap().get(currentPosition) != null) {
 			if (gameModel.getUserLocation() != gameModel.getLadderMap().get(currentPosition)
 					&& gameModel.getCompLocation() != gameModel.getLadderMap().get(currentPosition))
 				currentPosition = gameModel.getLadderMap().get(currentPosition);
 		}
-		
-		
-		//checking for snake condition
+
+		// checking for snake condition
 		if (gameModel.getSnakeMap().get(currentPosition) != null) {
 			if (gameModel.getSnakeMapEnergy().get(currentPosition) > 0) {
-				currentPosition = gameModel.getSnakeMap().get(currentPosition);
 				gameModel.getSnakeMapEnergy().put(currentPosition,
 						gameModel.getSnakeMapEnergy().get(currentPosition) - 1);
+				currentPosition = gameModel.getSnakeMap().get(currentPosition);
+
 			}
 		}
 
-		
-		//Setting positions/winOrLoss/messages etc
+		// Setting positions/winOrLoss/messages etc
 		if (gameModel.isP1Chance()) {
 			if (currentPosition == gameModel.getNumberOfSquares()) {
 				gameModel.setSuccessMessage("Congrats!!! P1 Wins.");

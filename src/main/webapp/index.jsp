@@ -558,11 +558,17 @@ var gameModel;
 				$('#gameBoard').html(response.gameHtml);
 				
 				
-	$.each(gameModel.snakeMap, function(index, value) {
-
-						$('#ene_' + index).html("E-" + gameModel.snakeEnergy);
+					$.each(gameModel.snakeMap, function(index, value) {
 						
-						$('#ene_' + value).html("E-" + gameModel.snakeEnergy);
+					
+						$.each(gameModel.snakeMapEnergy, function(i, v) {
+							 if(index == i){						
+							$('#ene_' + index).html("E-" + v);
+							}
+							if(value == i){
+							$('#ene_' + value).html("E-" + v);
+							} 
+						});
 
 					});
 
