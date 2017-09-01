@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.shreyas.util.GuidUtil;
 import com.google.gson.GsonBuilder;
 
 @Controller
@@ -24,13 +23,16 @@ public class GameController {
 
 	@ResponseBody
 	@RequestMapping(value = "/gameBoard", method = RequestMethod.POST)
-	public GameModel generateGameBoard(@RequestBody String gameDetails, Model model, HttpSession session)
-			throws Exception {
-
+	public GameModel generateGameBoard(@RequestBody String gameDetails, Model model) throws Exception {
+		// Mapping Game Model class using gson builder
 		GameModel gameModel = new GsonBuilder().create().fromJson(gameDetails, GameModel.class);
-		
-		gameModel.setMessage("");
 
+		// Clearing all messages
+		gameModel.setMessage("");
+		gameModel.setSuccessMessage("");
+
+		// Processing input and adding to hash map to make search complexity
+		// O(1).
 		String[] snakesSplit = gameModel.getSnakes().split("~");
 
 		String[] laddersSplit = gameModel.getLadders().split("~");
@@ -50,25 +52,27 @@ public class GameController {
 			snakeMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[0]));
 
 			snakeHungryMap.put(Integer.parseInt(snakeSplit[0]), Integer.parseInt(hungerLevelSplit[1]));
-			
+
 		}
+		// Adding snake's head and tail and the respective hunger
 		gameModel.setSnakeMap(snakeMap);
 		gameModel.setSnakeMapEnergy(snakeHungryMap);
 
 		for (int i = 0; i < laddersSplit.length; i++) {
 			String[] ladderSplit = laddersSplit[i].split("\\s");
-			
-			if(snakeMap.get(Integer.parseInt(ladderSplit[0]))!= null || snakeMap.get(Integer.parseInt(ladderSplit[1]))!= null){
-				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(ladderSplit[0]));
+
+			if (snakeMap.get(Integer.parseInt(ladderSplit[0])) != null
+					|| snakeMap.get(Integer.parseInt(ladderSplit[1])) != null) {
+				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(ladderSplit[0]));
 				return gameModel;
 			}
-			
-			
+
 			ladderMap.put(Integer.parseInt(ladderSplit[0]), Integer.parseInt(ladderSplit[1]));
 		}
-		
+
+		// Adding ladders
 		gameModel.setLadderMap(ladderMap);
-		
+
 		Map<Integer, String> memoryMap = new HashMap<Integer, String>();
 		Map<Integer, String> magicMap = new HashMap<Integer, String>();
 		Map<Integer, String> trampolineMap = new HashMap<Integer, String>();
@@ -76,44 +80,51 @@ public class GameController {
 		Map<Integer, Integer> pitStopMap = new HashMap<Integer, Integer>();
 
 		for (int i = 0; i < memorySplit.length; i++) {
-			
-			if(snakeMap.get(Integer.parseInt(memorySplit[i]))!= null || ladderMap.get(Integer.parseInt(memorySplit[i]))!= null){
-				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(memorySplit[i]));
+
+			if (snakeMap.get(Integer.parseInt(memorySplit[i])) != null
+					|| ladderMap.get(Integer.parseInt(memorySplit[i])) != null) {
+				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(memorySplit[i]));
 				return gameModel;
 			}
-			
+
 			memoryMap.put(Integer.parseInt(memorySplit[i]), "");
 		}
 
 		for (int i = 0; i < magicSplit.length; i++) {
-			
-			if(snakeMap.get(Integer.parseInt(magicSplit[i]))!= null || ladderMap.get(Integer.parseInt(magicSplit[i]))!= null || memoryMap.get(Integer.parseInt(magicSplit[i]))!= null){
-				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(magicSplit[i]));
+
+			if (snakeMap.get(Integer.parseInt(magicSplit[i])) != null
+					|| ladderMap.get(Integer.parseInt(magicSplit[i])) != null
+					|| memoryMap.get(Integer.parseInt(magicSplit[i])) != null) {
+				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(magicSplit[i]));
 				return gameModel;
 			}
-			
+
 			magicMap.put(Integer.parseInt(magicSplit[i]), "");
 		}
 
 		for (int i = 0; i < trampolineSplit.length; i++) {
-			if(snakeMap.get(Integer.parseInt(trampolineSplit[i]))!= null || ladderMap.get(Integer.parseInt(trampolineSplit[i]))!= null || 
-					memoryMap.get(Integer.parseInt(trampolineSplit[i]))!= null || magicMap.get(Integer.parseInt(trampolineSplit[i]))!= null){
-				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(trampolineSplit[i]));
+			if (snakeMap.get(Integer.parseInt(trampolineSplit[i])) != null
+					|| ladderMap.get(Integer.parseInt(trampolineSplit[i])) != null
+					|| memoryMap.get(Integer.parseInt(trampolineSplit[i])) != null
+					|| magicMap.get(Integer.parseInt(trampolineSplit[i])) != null) {
+				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(trampolineSplit[i]));
 				return gameModel;
 			}
-			
+
 			trampolineMap.put(Integer.parseInt(trampolineSplit[i]), "");
 		}
 
 		for (int i = 0; i < elevatorSplit.length; i++) {
-			
-			if(snakeMap.get(Integer.parseInt(elevatorSplit[i]))!= null || ladderMap.get(Integer.parseInt(elevatorSplit[i]))!= null || 
-					memoryMap.get(Integer.parseInt(elevatorSplit[i]))!= null || magicMap.get(Integer.parseInt(elevatorSplit[i]))!= null ||
-							trampolineMap.get(Integer.parseInt(elevatorSplit[i]))!= null){
-				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(elevatorSplit[i]));
+
+			if (snakeMap.get(Integer.parseInt(elevatorSplit[i])) != null
+					|| ladderMap.get(Integer.parseInt(elevatorSplit[i])) != null
+					|| memoryMap.get(Integer.parseInt(elevatorSplit[i])) != null
+					|| magicMap.get(Integer.parseInt(elevatorSplit[i])) != null
+					|| trampolineMap.get(Integer.parseInt(elevatorSplit[i])) != null) {
+				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(elevatorSplit[i]));
 				return gameModel;
 			}
-			
+
 			elevatorMap.put(Integer.parseInt(elevatorSplit[i]), "");
 		}
 
@@ -134,14 +145,17 @@ public class GameController {
 			int pitStop = Integer.parseInt(pitStopSplit[0]);
 
 			int pitStopEnergy = Integer.parseInt(pitStopSplit[1]);
-			
-			if(snakeMap.get(Integer.parseInt(pitStopSplit[i]))!= null || ladderMap.get(Integer.parseInt(pitStopSplit[i]))!= null || 
-					memoryMap.get(Integer.parseInt(pitStopSplit[i]))!= null || magicMap.get(Integer.parseInt(pitStopSplit[i]))!= null ||
-							trampolineMap.get(Integer.parseInt(pitStopSplit[i]))!= null || elevatorMap.get(Integer.parseInt(pitStopSplit[i]))!= null){
-				gameModel.setMessage("Sqaure points conflicting at location "+Integer.parseInt(pitStopSplit[i]));
+
+			if (snakeMap.get(Integer.parseInt(pitStopSplit[i])) != null
+					|| ladderMap.get(Integer.parseInt(pitStopSplit[i])) != null
+					|| memoryMap.get(Integer.parseInt(pitStopSplit[i])) != null
+					|| magicMap.get(Integer.parseInt(pitStopSplit[i])) != null
+					|| trampolineMap.get(Integer.parseInt(pitStopSplit[i])) != null
+					|| elevatorMap.get(Integer.parseInt(pitStopSplit[i])) != null) {
+				gameModel.setMessage("Sqaure points conflicting at location " + Integer.parseInt(pitStopSplit[i]));
 				return gameModel;
 			}
-			
+
 			pitStopMap.put(pitStop, pitStopEnergy);
 		}
 
@@ -149,8 +163,9 @@ public class GameController {
 
 		int sqrt = (int) Math.sqrt(number);
 
-		gameModel.setUserLocation(1);
+		// Adding rest of the details to the game board
 
+		gameModel.setUserLocation(1);
 		gameModel.setCompLocation(1);
 		gameModel.setPitStopMap(pitStopMap);
 		gameModel.setTrampolineMap(trampolineMap);
@@ -164,11 +179,9 @@ public class GameController {
 		boolean ulStarted = false;
 		boolean ulClosed = true;
 
-		while (counter > 0) {// start while
+		while (counter > 0) {// start while loop to generate game board
 
-			if (loopCount % sqrt == 0 && counter != number) {// checks if the
-																// counter is at
-																// a
+			if (loopCount % sqrt == 0 && counter != number) {
 				if (ulStarted && !ulClosed) {
 					html += "</ul><br>";
 					ulClosed = true;
@@ -176,12 +189,12 @@ public class GameController {
 				}
 
 				if (iteration == -1) {
-					// subtract sqrt from the counter
-					// and sets it to start adding by one
+					// subtract (sqrt-1) from the counter for odd row
 					counter -= sqrt - 1;
 					iteration = 1;
 
 				} else {
+					// subtract (sqrt+1) from the counter for even row
 					counter -= sqrt + 1;
 					if (counter < 1) {
 						break;
@@ -215,7 +228,7 @@ public class GameController {
 
 				for (Map.Entry<Integer, Integer> entry : gameModel.getSnakeMap().entrySet()) {
 					if (x == entry.getKey()) {
-						if(gameModel.getSnakeMapEnergy().get(x) == null){
+						if (gameModel.getSnakeMapEnergy().get(x) == null) {
 							ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getValue() + ")<span id='ene_" + x
 									+ "'></span></div>";
 							break;
@@ -226,8 +239,9 @@ public class GameController {
 					}
 
 					if (x == entry.getValue()) {
-						if(gameModel.getSnakeMapEnergy().get(x) == null){
-							ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x + "'></span></div>";
+						if (gameModel.getSnakeMapEnergy().get(x) == null) {
+							ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x
+									+ "'></span></div>";
 							break;
 						}
 						ls = "<div id='snake_" + x + "'> S(" + x + "," + entry.getKey() + ")<span id='ene_" + x + "'>E-"
@@ -284,8 +298,9 @@ public class GameController {
 			loopCount++;
 		}
 
+		// Add rest of the details to game model and set some properties to
+		// default values
 		gameModel.setGameHtml(html);
-
 		gameModel.setEnergy(energy);
 		gameModel.setP1Energy(energy);
 		gameModel.setP2Energy(energy);
@@ -293,13 +308,8 @@ public class GameController {
 		gameModel.setCompLocation(1);
 		gameModel.setP1Step(1);
 		gameModel.setP2Step(1);
-
 		gameModel.setP1Chance(true);
 		gameModel.setP2Chance(false);
-
-		session.setAttribute("session_id", GuidUtil.getId());
-
-		session.setAttribute("AppUser", gameModel);
 
 		return gameModel;
 	}
@@ -309,12 +319,12 @@ public class GameController {
 	public GameModel diceRolled(@RequestBody String gameDetails, Model model, HttpSession session) throws Exception {
 		GameModel gameModel = new GsonBuilder().create().fromJson(gameDetails, GameModel.class);
 		int currentPosition = 0;
-
+		// clear messages
 		gameModel.setMessage("");
 		gameModel.setSuccessMessage("");
 
+		// checking/setting respective players energies and setting positions
 		if (gameModel.isP1Chance()) {
-
 			currentPosition = gameModel.getUserLocation();
 			if (currentPosition != 1) {
 				gameModel.setP1Step(gameModel.getP1Step() + 1);
@@ -339,6 +349,8 @@ public class GameController {
 			gameModel.setP2Energy(gameModel.getP2Energy() - 1);
 		}
 
+		
+		//Checking for magic condition
 		if (gameModel.isP1Chance()) {
 			if (gameModel.isP1Magic()) {
 				currentPosition -= gameModel.getDiceValue();
@@ -355,6 +367,7 @@ public class GameController {
 
 		}
 
+		//Toggling magic scenarios
 		if (gameModel.getMagicMap().get(currentPosition) != null) {
 			if (gameModel.isP1Chance()) {
 				if (gameModel.isP1Magic()) {
@@ -370,11 +383,14 @@ public class GameController {
 				}
 			}
 		}
+		
+		//checking for trampoline condition
 
 		if (gameModel.getTrampolineMap().get(currentPosition) != null) {
 			currentPosition += gameModel.getDiceValue();
 		}
 
+		//checking for elevator condition
 		if (gameModel.getElevatorMap().get(currentPosition) != null) {
 			int x = gameModel.getDiceValue();
 
@@ -386,21 +402,26 @@ public class GameController {
 
 		}
 
+		//checking for ladder condition
 		if (gameModel.getLadderMap().get(currentPosition) != null) {
 			if (gameModel.getUserLocation() != gameModel.getLadderMap().get(currentPosition)
 					&& gameModel.getCompLocation() != gameModel.getLadderMap().get(currentPosition))
 				currentPosition = gameModel.getLadderMap().get(currentPosition);
 		}
-
+		
+		
+		//checking for snake condition
 		if (gameModel.getSnakeMap().get(currentPosition) != null) {
 			if (gameModel.getSnakeMapEnergy().get(currentPosition) > 0) {
 				currentPosition = gameModel.getSnakeMap().get(currentPosition);
-				gameModel.getSnakeMapEnergy().put(currentPosition, gameModel.getSnakeMapEnergy().get(currentPosition) - 1);
+				gameModel.getSnakeMapEnergy().put(currentPosition,
+						gameModel.getSnakeMapEnergy().get(currentPosition) - 1);
 			}
 		}
 
+		
+		//Setting positions/winOrLoss/messages etc
 		if (gameModel.isP1Chance()) {
-
 			if (currentPosition == gameModel.getNumberOfSquares()) {
 				gameModel.setSuccessMessage("Congrats!!! P1 Wins.");
 				return gameModel;
@@ -433,7 +454,7 @@ public class GameController {
 			if (currentPosition < 1) {
 				gameModel.setMessage("Sorry!! You cannot go below 0. Your magic feature is disabled now.");
 				gameModel.setUserLocation(1);
-				gameModel.setP1Energy(gameModel.getNumberOfSquares()/3);
+				gameModel.setP1Energy(gameModel.getNumberOfSquares() / 3);
 				gameModel.setP1Magic(false);
 			}
 		} else {
@@ -471,7 +492,7 @@ public class GameController {
 			if (currentPosition < 1) {
 				gameModel.setMessage("Sorry!! You cannot go below 0. Your magic feature is disabled now.");
 				gameModel.setCompLocation(1);
-				gameModel.setP2Energy(gameModel.getNumberOfSquares()/3);
+				gameModel.setP2Energy(gameModel.getNumberOfSquares() / 3);
 				gameModel.setP2Magic(false);
 			}
 		}
